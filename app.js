@@ -1,22 +1,31 @@
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+
+require('dotenv').config();
+const PORT = 5000;
+const db = process.env.MONGO_URI;
 
 const app = express();
-const URI =
-  "mongodb+srv://stevish45:<password>@littleroad.jligexa.mongodb.net/?retryWrites=true&w=majority&appName=LittleRoad";
 
-app.use(express.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.json());
 
+app.use('/', require('./routes'));
+
 try {
-  mongoose.connect(URI);
-  console.log("connected to mongodb");
+    mongoose.connect(
+        // 'mongodb+srv://stevish45:Bingo!23@littleroad.jligexa.mongodb.net/?retryWrites=true&w=majority&appName=LittleRoad'
+        db
+    );
+    console.log('connected to mongodb');
 } catch (error) {
-  console.log(`Something went wrong ${error}`);
+    console.log(`Something went wrong ${error}`);
 }
 
 app.listen(5000, () => {
-  console.log("Server is Listening");
+    console.log('Server is Listening');
 });

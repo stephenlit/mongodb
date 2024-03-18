@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.json());
 
-app.use('/', require('./routes'));
+app.use('/api', require('./routes/messageRoutes'));
 
 try {
     mongoose.connect(
@@ -27,5 +27,5 @@ try {
 }
 
 app.listen(5000, () => {
-    console.log('Server is Listening');
+    console.log(`Listening on ${PORT}`);
 });

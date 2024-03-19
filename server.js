@@ -3,6 +3,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 require('dotenv').config();
+const {errorHandler} = require('./middleware/errorMiddleware');
+
 const PORT = 5000;
 const db = process.env.MONGO_URI;
 
@@ -14,8 +16,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.json());
 
-app.use('/api', require('./routes/messageRoutes'));
-
+app.use('/api/messages', require('./routes/messageRoutes'));
+app.use(errorHandler);
 try {
     mongoose.connect(
         // 'mongodb+srv://stevish45:Bingo!23@littleroad.jligexa.mongodb.net/?retryWrites=true&w=majority&appName=LittleRoad'

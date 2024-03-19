@@ -2,24 +2,10 @@
 const express = require('express');
 const router = express.Router();
 
+const { getMessages, addMessage, updateMessage, deleteMessage } = require('../controller/messageController');
 
-router.get('/', (req, res) => {
-    res.status(200).json({message: 'Get messages'});
-});
+router.route('/').get(getMessages).post(addMessage);
+router.route('/:id').delete(deleteMessage).put(updateMessage);
 
-
-router.post('/', (req, res) => {
-    res.status(200).json({message: 'Add message'});
-});
-
-
-router.put('/:id', (req, res) => {
-    res.status(200).json({message: `Update message ${req.params.id}`});
-});
-
-
-router.delete('/:id', (req, res) => {
-    res.status(200).json({message: `Delete message ${req.params.id}`});
-});
 
 module.exports = router;

@@ -1,13 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const colors = require('colors');
+const connectDB = require('./config/db');
 
 require('dotenv').config();
 const {errorHandler} = require('./middleware/errorMiddleware');
 
 const PORT = 5000;
-const db = process.env.MONGO_URI;
-
+connectDB();
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -18,15 +19,8 @@ app.use(express.json());
 
 app.use('/api/messages', require('./routes/messageRoutes'));
 app.use(errorHandler);
-try {
-    mongoose.connect(
-        // 'mongodb+srv://stevish45:Bingo!23@littleroad.jligexa.mongodb.net/?retryWrites=true&w=majority&appName=LittleRoad'
-        db
-    );
-    console.log('connected to mongodb');
-} catch (error) {
-    console.log(`Something went wrong ${error}`);
-}
+
+
 
 app.listen(5000, () => {
     console.log(`Listening on ${PORT}`);

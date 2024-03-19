@@ -1,11 +1,13 @@
 const asyncHandler = require('express-async-handler');
+const Messages = require('../models/messagesModel');
 
 //@description Get messages
 //@route GET /api/messages
 //@access private
 
 const getMessages = asyncHandler(async (req, res) => {
-    res.status(200).json({message: 'Get all messages'});
+    const messages = await Messages.find();
+    res.status(200).json({ messages });
 });
 
 //@description Add messages
@@ -13,11 +15,16 @@ const getMessages = asyncHandler(async (req, res) => {
 //@access private
 
 const addMessage = asyncHandler(async (req, res) => {
-    if(!req.body.text) {
-        res.status(400)
+    if (!req.body.title) {
+        res.status(400);
         throw new Error('Please add a text field');
     }
-    res.status(200).json({message: 'Add message'});
+    const message = await Messages.create({
+        title: req.body.title,
+        author: req.body.author,
+        body: req.body.body,
+    });
+    res.status(200).json({ message });
 });
 
 //@description update messages
@@ -25,7 +32,22 @@ const addMessage = asyncHandler(async (req, res) => {
 //@access private
 
 const updateMessage = asyncHandler(async (req, res) => {
-    res.status(200).json({message: `Update message ${req.params.id}`});
+    const message = await Messages.findById(req.params.id);
+
+    if (!message) {
+        res.status(400);
+        throw new Error('Message not found');
+    }
+
+    const updatedMessage = await Messages.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+            new: true,
+        }
+    );
+
+    res.status(200).json(updatedMessage);
 });
 
 //@description Delete messages
@@ -33,7 +55,16 @@ const updateMessage = asyncHandler(async (req, res) => {
 //@access private
 
 const deleteMessage = asyncHandler(async (req, res) => {
-    res.status(200).json({message: `Delete message ${req.params.id}`});
+    const message = await Messages.findById(req.params.id);
+
+    if(!message) {
+        res.status(400);
+        throw new Error('Message not found');
+    }
+
+    await message.deleteOne();
+
+    res.status(200).json({id: req.params.id});
 });
 
 module.exports = {
@@ -41,4 +72,4 @@ module.exports = {
     addMessage,
     updateMessage,
     deleteMessage,
-}
+};

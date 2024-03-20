@@ -6,7 +6,7 @@ const Messages = require('../models/messagesModel');
 //@access private
 
 const getMessages = asyncHandler(async (req, res) => {
-    const messages = await Messages.find();
+    const messages = await Messages.find({ user: req.user.id });
     res.status(200).json({ messages });
 });
 
@@ -23,6 +23,7 @@ const addMessage = asyncHandler(async (req, res) => {
         title: req.body.title,
         author: req.body.author,
         body: req.body.body,
+        user: req.user.id,
     });
     res.status(200).json({ message });
 });
@@ -57,14 +58,14 @@ const updateMessage = asyncHandler(async (req, res) => {
 const deleteMessage = asyncHandler(async (req, res) => {
     const message = await Messages.findById(req.params.id);
 
-    if(!message) {
+    if (!message) {
         res.status(400);
         throw new Error('Message not found');
     }
 
     await message.deleteOne();
 
-    res.status(200).json({id: req.params.id});
+    res.status(200).json({ id: req.params.id });
 });
 
 module.exports = {

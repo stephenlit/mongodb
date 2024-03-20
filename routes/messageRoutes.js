@@ -2,10 +2,22 @@
 const express = require('express');
 const router = express.Router();
 
-const { getMessages, addMessage, updateMessage, deleteMessage } = require('../controller/messageController');
+const { protect } = require('../middleware/authMiddleware');
 
-router.route('/').get(getMessages).post(addMessage);
-router.route('/:id').delete(deleteMessage).put(updateMessage);
+const {
+    getMessages,
+    addMessage,
+    updateMessage,
+    deleteMessage,
+} = require('../controller/messageController');
 
+router
+    .route('/')
+    .get(protect, getMessages)
+    .post(protect, addMessage);
+router
+    .route('/:id')
+    .delete(protect, deleteMessage)
+    .put(protect, updateMessage);
 
 module.exports = router;

@@ -18,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/messages', require('./routes/messageRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
 app.use(errorHandler);
 
 
